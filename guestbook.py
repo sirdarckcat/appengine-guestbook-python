@@ -107,7 +107,7 @@ class Guestbook(webapp2.RequestHandler):
             list({"content": g.content} for g in greetings))
         callback = self.request.get('callback')
         if callback:
-            self.content_type = "text/javascript"
+            self.response.content_type = "text/javascript"
             # This is JS injection
             self.response.write('%s(%s)'%(callback, greetings_json))
         else:
