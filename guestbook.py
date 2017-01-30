@@ -34,6 +34,8 @@ JINJA_ENVIRONMENT = jinja2.Environment(
 
 DEFAULT_GUESTBOOK_NAME = 'default_guestbook'
 
+ORIGIN_TRIAL_TOKEN = 'AoQroD5dggOxFFPyFTD9qh8zQt1igp2ESsU9oSxjkyGlQtnzpfhQiJ2eKl8HfotFdKPEy9mXM6d7GtqG2g5HXQ0AAABmeyJvcmlnaW4iOiJodHRwczovL2lzb2xhdGUtc2NyaXB0cy1kZW1vLmFwcHNwb3QuY29tOjQ0MyIsImZlYXR1cmUiOiJGb3JlaWduRmV0Y2giLCJleHBpcnkiOjE0ODk0MTc1Njl9'
+
 
 # We set a parent key on the 'Greetings' to ensure that they are all
 # in the same entity group. Queries across the single entity group
@@ -90,6 +92,7 @@ class MainPage(webapp2.RequestHandler):
         template = JINJA_ENVIRONMENT.get_template('index.html')
         self.response.headers.add("X-XSS-Protection","0")
         self.response.headers.add("Set-Cookie","__isolatedScript-foo=1;httpOnly;secure")
+        self.response.headers.add("origin-trial", ORIGIN_TRIAL_TOKEN)
         self.response.write(template.render(template_values))
 # [END main_page]
 
@@ -108,6 +111,7 @@ class Guestbook(webapp2.RequestHandler):
         callback = self.request.get('callback')
         if callback:
             self.response.content_type = "text/javascript"
+            self.response.headers.add("origin-trial", ORIGIN_TRIAL_TOKEN)
             # This is JS injection
             self.response.write('%s(%s)'%(callback, greetings_json))
         else:
